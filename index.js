@@ -8,13 +8,8 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json())
 
-
-
-
 const uri = 'mongodb+srv://travelZoneDbUser:S4I6HvWqhKwyr0mk@cluster0.1mua1t2.mongodb.net/?retryWrites=true&w=majority';
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-
 
 async function run(){
     try{
@@ -22,9 +17,19 @@ async function run(){
         
         app.get('/countries',async(req,res)=>{
         const query = {} ;
-        const cursor = countriesCollection.find(query);
+        const cursor = countriesCollection.find(query).limit(3);
         const result= await cursor.toArray();
+        console.log(result)
         res.send(result);
+        
+        })
+
+        app.get('/allcountries',async(req,res)=>{
+            const query = {} ;
+            const cursor = countriesCollection.find(query);
+            const result= await cursor.toArray();
+            console.log(result)
+            res.send(result);
         })
 
     }
