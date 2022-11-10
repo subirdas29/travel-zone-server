@@ -43,7 +43,7 @@ async function run(){
                     email:req.query.email
                 }
             }
-            const cursor= reviewCollection.find(query);
+            const cursor= reviewCollection.find(query).sort({"updatedAt":-1});
             const result = await cursor.toArray();
             res.send(result);
         })
@@ -67,7 +67,7 @@ async function run(){
         app.post('/reviews',async(req,res)=>{
             const review = req.body
             const result =await reviewCollection.insertOne(review)
-         
+            
             res.send(result);
         })
        
@@ -76,7 +76,7 @@ async function run(){
             const id = req.params.id
             const query = {service:(id)}; 
            
-            const cursor= reviewCollection.find(query);
+            const cursor= reviewCollection.find(query).sort({"updatedAt":-1});
             const result = await cursor.toArray();
             console.log(result)
             res.send(result);
@@ -114,7 +114,8 @@ async function run(){
 
             const updatedReview ={
                 $set:{
-                    text:updated.text
+                    text:updated.text,
+                    updatedAt: new Date()
                 }
             }
 
