@@ -26,6 +26,13 @@ async function run(){
         
         })
 
+        app.post('/reviews',async(req,res)=>{
+            const review = req.body
+            const result =await reviewCollection.insertOne(review)
+            
+            res.send(result);
+        })
+
         app.get('/allcountries',async(req,res)=>{
             const query = {} ;
             const cursor = countriesCollection.find(query);
@@ -64,12 +71,7 @@ async function run(){
             res.send(result);
         })
 
-        app.post('/reviews',async(req,res)=>{
-            const review = req.body
-            const result =await reviewCollection.insertOne(review)
-            
-            res.send(result);
-        })
+        
        
         
         app.get('/reviews/:id',async(req,res)=>{
