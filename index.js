@@ -33,25 +33,9 @@ async function run(){
             
             res.send(result);
         })
-
-       
-        app.get('/services/allcountries/:id',async(req,res)=>{
-            const id = req.params.id
-            const query = {_id:ObjectId(id)} ;
-            const result = await countriesCollection.findOne(query);
-           
-            res.send(result);
-        })
-
-        app.post('/reviews',async(req,res)=>{
-            const review = req.body
-            const result =await reviewCollection.insertOne(review)
-         
-            res.send(result);
-        })
-       
-
         app.get('/reviews',async(req,res)=>{
+
+            console.log(req.query)
             let query = {}; 
             if(req.query.email)
             {
@@ -64,7 +48,80 @@ async function run(){
             res.send(result);
         })
 
-    
+        app.delete('/reviews/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)}
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result)
+        })
+
+
+       
+        app.get('/services/allcountries/:id',async(req,res)=>{
+            const id = req.params.id
+            const query = {_id:ObjectId(id)} ;
+            const result = await countriesCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.post('/reviews',async(req,res)=>{
+            const review = req.body
+            const result =await reviewCollection.insertOne(review)
+         
+            res.send(result);
+        })
+       
+        
+        app.get('/reviews/:id',async(req,res)=>{
+            const id = req.params.id
+            const query = {service:(id)}; 
+           
+            const cursor= reviewCollection.find(query);
+            const result = await cursor.toArray();
+            console.log(result)
+            res.send(result);
+        })
+
+        
+        app.get('/allreviews',async(req,res)=>{
+
+            const query = {} ;
+            const cursor = reviewCollection.find(query);
+            const result= await cursor.toArray();
+            
+            res.send(result);
+        })
+
+        app.get('/allreviews/:id',async(req,res)=>{
+          
+            const id = req.params.id
+            const query = {_id:(ObjectId(id))}; 
+           
+            const result = await reviewCollection.findOne(query);
+           
+            console.log(result)
+            res.send(result);
+        })
+        
+        
+
+
+        app.put('/allreviews/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query = {_id:(ObjectId(id))}; 
+            const updated= req.body;
+            const option = {upsert:true}
+
+            const updatedReview ={
+                $set:{
+                    text:updated.text
+                }
+            }
+
+            const result =await reviewCollection.updateOne(query,updatedReview,option)
+            res.send(result);
+            console.log(result)
+        })
 
     }
     finally{
